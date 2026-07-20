@@ -1,0 +1,47 @@
+## .NET / Visual Studio
+bin/
+obj/
+out/
+*.user
+*.suo
+.vs/
+.vscode/
+*.userprefs
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Bb]in/
+[Oo]bj/
+
+## Rider
+.idea/
+
+## Test results
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+coverage/
+
+## User-specific & secrets
+appsettings.*.local.json
+secrets.json
+*.pfx
+*.env
+
+## Uploaded content (runtime files, keep folder via .gitkeep)
+## PDFs live outside wwwroot so they are only reachable through the authorized API endpoints.
+src/DigitalBookLibrary.WebAPI/App_Data/uploads/**
+!src/DigitalBookLibrary.WebAPI/App_Data/uploads/.gitkeep
+src/DigitalBookLibrary.WebAPI/wwwroot/uploads/*
+!src/DigitalBookLibrary.WebAPI/wwwroot/uploads/.gitkeep
+
+## Stray Office scratch files (e.g. "New Microsoft Word Document.docx")
+*.docx
+
+## OS
+.DS_Store
+Thumbs.db

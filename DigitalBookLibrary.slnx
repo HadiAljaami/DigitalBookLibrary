@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DigitalBookLibrary.Application/DigitalBookLibrary.Application.csproj" />
+    <Project Path="src/DigitalBookLibrary.Domain/DigitalBookLibrary.Domain.csproj" />
+    <Project Path="src/DigitalBookLibrary.Infrastructure/DigitalBookLibrary.Infrastructure.csproj" />
+    <Project Path="src/DigitalBookLibrary.WebAPI/DigitalBookLibrary.WebAPI.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DigitalBookLibrary.UnitTests/DigitalBookLibrary.UnitTests.csproj" />
+  </Folder>
+</Solution>

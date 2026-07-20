@@ -1,0 +1,201 @@
+### Digital Book Library API — request collection
+### Works in VS Code (REST Client) and Visual Studio's .http runner.
+### Flow: run "login" first — it captures the access token into {{token}} for the calls below.
+
+@host = http://localhost:5014
+
+# Seeded admin (see appsettings Seed section; override in production via user-secrets).
+@adminId = admin@digitalbooklibrary.local
+@adminPassword = Admin#12345
+
+# ----------------------------------------------------------------------------------
+# Auth
+# ----------------------------------------------------------------------------------
+
+# @name login
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "identifier": "{{adminId}}",
+  "password": "{{adminPassword}}"
+}
+
+###
+
+# Pulls the tokens from the login response for every authenticated call below.
+@token = {{login.response.body.data.accessToken}}
+@refreshToken = {{login.response.body.data.refreshToken}}
+
+###
+
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "newmember",
+  "email": "newmember@example.com",
+  "password": "Str0ng#Pass1"
+}
+
+###
+
+POST {{host}}/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+###
+
+GET {{host}}/api/auth/me
+Authorization: Bearer {{token}}
+
+###
+
+POST {{host}}/api/auth/logout
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+# ----------------------------------------------------------------------------------
+# Catalog — books, authors, categories (public reads; writes are Admin-only)
+# ----------------------------------------------------------------------------------
+
+GET {{host}}/api/books?pageNumber=1&pageSize=10&sortBy=title
+
+###
+
+GET {{host}}/api/books/1
+
+###
+
+POST {{host}}/api/books
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "The Pragmatic Programmer",
+  "authorId": 1,
+  "categoryId": 1,
+  "language": "en",
+  "description": "From journeyman to master."
+}
+
+###
+
+GET {{host}}/api/authors
+
+###
+
+GET {{host}}/api/categories
+
+# ----------------------------------------------------------------------------------
+# Interaction — rating, comments, saved books, read/download
+# ----------------------------------------------------------------------------------
+
+PUT {{host}}/api/books/1/rating
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "value": 5
+}
+
+###
+
+GET {{host}}/api/books/1/rating/summary
+
+###
+
+GET {{host}}/api/books/1/comments
+
+###
+
+POST {{host}}/api/books/1/comments
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "text": "A classic — highly recommended."
+}
+
+###
+
+POST {{host}}/api/saved-books/1
+Authorization: Bearer {{token}}
+
+###
+
+GET {{host}}/api/me/saved-books
+Authorization: Bearer {{token}}
+
+###
+
+# Streams the PDF (needs the book to have an uploaded file).
+GET {{host}}/api/books/1/download
+Authorization: Bearer {{token}}
+
+# ----------------------------------------------------------------------------------
+# Admin dashboard (Admin-only — 403 for members)
+# ----------------------------------------------------------------------------------
+
+GET {{host}}/api/admin/dashboard/summary
+Authorization: Bearer {{token}}
+
+###
+
+GET {{host}}/api/admin/dashboard/top-books?metric=downloads&take=10
+Authorization: Bearer {{token}}
+
+###
+
+GET {{host}}/api/admin/dashboard/recent?type=books&take=10
+Authorization: Bearer {{token}}
+
+###
+
+GET {{host}}/api/admin/dashboard/activity-series?interval=day
+Authorization: Bearer {{token}}
+
+###
+
+GET {{host}}/api/admin/dashboard/distribution?by=category
+Authorization: Bearer {{token}}
+
+# ----------------------------------------------------------------------------------
+# Admin user management + audit trail
+# ----------------------------------------------------------------------------------
+
+GET {{host}}/api/admin/users?pageNumber=1&pageSize=20
+Authorization: Bearer {{token}}
+
+###
+
+PATCH {{host}}/api/admin/users/2/active
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "isActive": true
+}
+
+###
+
+PATCH {{host}}/api/admin/users/2/roles
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "roles": ["Member"]
+}
+
+###
+
+GET {{host}}/api/admin/users/audit?pageNumber=1&pageSize=20&entityName=Book
+Authorization: Bearer {{token}}
+
+###

@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Enables `dotnet user-secrets` so the JWT key / admin password / connection string can be
+         overridden locally without ever being committed (see README §Configuration). -->
+    <UserSecretsId>digital-book-library-8f3a2c1b</UserSecretsId>
+    <!-- Emit an XML doc file so Swagger surfaces the controllers' /// summaries.
+         1591 = "missing XML comment"; we document actions, not every DTO member, so silence it. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Swagger UI (Swashbuckle); the built-in OpenAPI package is removed to avoid a known vulnerability. -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DigitalBookLibrary.Application\DigitalBookLibrary.Application.csproj" />
+    <ProjectReference Include="..\DigitalBookLibrary.Infrastructure\DigitalBookLibrary.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
+  </ItemGroup>
+
+</Project>
